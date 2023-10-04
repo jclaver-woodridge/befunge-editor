@@ -1,0 +1,31 @@
+@import "styles/theme.scss";
+@import "styles/sizes.scss";
+
+.primaryLayout {
+    color: var(--primaryVeryDark);
+    background-color: var(--primaryVeryLight);
+    height: 100%;
+}
+
+.container {
+    height: calc(100% - 5rem);
+
+    .content {
+        position: absolute;
+        top: $primaryHeaderHeight;
+        left: 0;
+        bottom: 0;
+        right: 0;
+        padding: 1rem;
+
+        overflow-y: scroll;
+
+        a {
+            color: var(--secondaryDark);
+        }
+
+        h1,h2,h3,h4,h5,h6 {
+            color: var(--primaryDark);
+        }
+    }
+}

@@ -1,7 +1,11 @@
+@import "styles/theme.scss";
+@import "styles/sizes.scss";
+
 .header {
     position: relative;
 
     width: 100%;
+    height: $primaryHeaderHeight;
 
     display: flex;
     justify-content: center;
@@ -9,6 +13,9 @@
 
     font-weight: 600;
     font-size: 2em;
+
+    background-color: var(--primary);
+    color: var(--primaryVeryLight);
 
     z-index: 1;
 }

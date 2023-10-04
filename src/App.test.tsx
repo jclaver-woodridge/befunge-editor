@@ -5,6 +5,6 @@ import App from './App';
 
 test('has the word "befunge" somewhere in the app by default', () => {
     render(<App />);
-    const befungeElement = screen.getByText(/befunge/i);
-    expect(befungeElement).toBeInTheDocument();
+    const befungeElements = screen.getAllByText(/befunge/i);
+    expect(befungeElements.length).toBeGreaterThan(0);
 });
