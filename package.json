@@ -1,26 +1,36 @@
 {
-  "name": "befunge",
+  "name": "training-problem",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@testing-library/jest-dom": "^5.17.0",
-    "@testing-library/react": "^13.4.0",
-    "@testing-library/user-event": "^13.5.0",
-    "@types/jest": "^27.5.2",
-    "@types/node": "^16.18.57",
-    "@types/react": "^18.2.24",
-    "@types/react-dom": "^18.2.9",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
+    "@fontsource/mulish": "^4.5.12",
+    "@testing-library/jest-dom": "^5.14.1",
+    "@testing-library/react": "^13.0.0",
+    "@testing-library/user-event": "^14.2.6",
+    "@types/jest": "^28.1.6",
+    "@types/node": "^18.0.6",
+    "@types/react": "^18.0.0",
+    "@types/react-dom": "^18.0.0",
+    "axios": "^0.27.2",
+    "classnames": "^2.3.1",
+    "common-tags": "^1.8.2",
+    "react": "^18.1.0",
+    "react-dom": "^18.1.0",
+    "react-router-dom": "6",
     "react-scripts": "5.0.1",
-    "typescript": "^4.9.5",
-    "web-vitals": "^2.1.4"
+    "typescript": "^4.4.2",
+    "web-vitals": "^2.1.0"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "lint:check": "eslint . --ext .ts,.tsx --max-warnings 0",
+    "lint:fix": "eslint . --ext .ts,.tsx --fix",
+    "prettier:check": "prettier --check .",
+    "prettier:fix": "prettier --write .",
+    "prepare": "husky install"
   },
   "eslintConfig": {
     "extends": [
@@ -39,5 +49,18 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@types/common-tags": "^1.8.1",
+    "eslint": "^8.20.0",
+    "eslint-plugin-react": "^7.30.1",
+    "husky": ">=6",
+    "lint-staged": ">=10",
+    "prettier": "2.7.1",
+    "sass": "^1.53.0"
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx}": "eslint --cache --fix",
+    "*.{js,jsx,ts,tsx,css,scss,json,md}": "prettier --write"
   }
 }
