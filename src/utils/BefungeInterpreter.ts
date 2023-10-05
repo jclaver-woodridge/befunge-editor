@@ -1,4 +1,4 @@
-class BefungeInterpreter {
+export class BefungeInterpreter {
     #width: number;
     #height: number;
     #initialProgram: string[][];

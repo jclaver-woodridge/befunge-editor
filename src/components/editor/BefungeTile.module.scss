@@ -1,0 +1,40 @@
+@import "styles/theme";
+
+.tile {
+    margin: 0;
+
+    border: 1px solid var(--lightgray);
+
+    display: inline-block;
+    width: 1.2em;
+    height: 1.5em;
+
+    box-sizing: border-box;
+
+    input {
+        width: 100%;
+        height: 100%;
+        box-sizing: border-box;
+
+        border: none;
+        background-color: transparent;
+
+        text-align: center;
+    }
+}
+
+.highlight-none {
+    background-color: var(--primaryVeryLight);
+
+    input {
+        font-weight: 400;
+    }
+}
+
+.highlight-hover {
+    background-color: var(--secondaryLight);
+
+    input {
+        font-weight: 600;
+    }
+}

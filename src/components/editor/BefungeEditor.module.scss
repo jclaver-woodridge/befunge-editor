@@ -1,0 +1,10 @@
+@import "styles/theme";
+
+.editor {
+    padding: 1em;
+
+    border: 2px solid var(--primaryVeryDark);
+    border-radius: 0.5em;
+
+    background-color: var(--primaryDark);
+}
