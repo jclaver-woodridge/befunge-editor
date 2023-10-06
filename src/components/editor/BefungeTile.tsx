@@ -1,7 +1,7 @@
 import React, { ChangeEvent, useCallback } from 'react';
 import styles from './BefungeTile.module.scss';
 import classNames from 'classnames';
-import { CodeModifyAction } from './BefungeEditor';
+import { CodeModifyAction } from 'providers/BefungeProvider';
 
 export interface TileProps {
     val: string;
