@@ -1,7 +1,7 @@
 import React, { ChangeEvent, useCallback } from 'react';
 import styles from './BefungeTile.module.scss';
 import classNames from 'classnames';
-import { CodeModifyAction } from 'providers/BefungeProvider';
+import { CodeModifyAction } from 'providers/CodeProvider';
 
 export interface TileProps {
     val: string;
@@ -14,17 +14,14 @@ export interface TileProps {
 const BefungeTile : React.FC<TileProps> = React.memo((props) => {
     let statusClass = "";
     switch (props.status) {
-        case "none":
-            statusClass = styles["highlight-none"];
-            break;
         case "hover":
             statusClass = styles["highlight-hover"];
             break;
+        default: break;
     }
 
     const onChange = useCallback((event: ChangeEvent<HTMLInputElement>) => {
         props.codeDispatch({
-            type: "set",
             row: props.row,
             col: props.col,
             val: event.target.value

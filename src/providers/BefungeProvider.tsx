@@ -1,63 +1,32 @@
-import React, { PropsWithChildren, createContext, useContext, useMemo, useReducer } from 'react';
+import React, { PropsWithChildren, createContext, useContext, useMemo } from 'react';
+import { BefungeInterpreter } from 'utils/BefungeInterpreter';
 
-export interface CodeModifyAction {
-    type: "set" | "unset",
-    col: number,
-    row: number,
-    val: string | null
-}
-
-function codeReducer(code: string[][], action: CodeModifyAction) {
-    if (!action.val) {
-        action.val = " ";
+export function createInitialCode() {
+    const res = [];
+    for (let i = 0; i < 20; i++) {
+        res.push(new Array(60).fill(" "));
     }
-
-    if (action.val.length > 1) {
-        action.val = action.val.replace(code[action.row][action.col], "");
-    }
-
-    const newCode = [...code];
-    switch (action.type) {
-        case "set":
-            if (action.val != null)
-                newCode[action.row][action.col] = action.val;
-            else
-                newCode[action.row][action.col] = " ";
-            break;
-        case "unset":
-            newCode[action.row][action.col] = " ";
-    }
-    return newCode;
+    return res;
 }
 
 export interface IBefungeContext {
-    code: string[][];
-    codeDispatch: React.Dispatch<CodeModifyAction>;
+    befungeInterpreter: BefungeInterpreter;
 }
 
 const BefungeContext = createContext<IBefungeContext>({
-    code: [[]],
-    codeDispatch: () => {}
+    befungeInterpreter: new BefungeInterpreter([[]])
 });
 
 export const useBefungeContext = () => useContext(BefungeContext);
 
 export const BefungeProvider: React.FC<PropsWithChildren> = (props) => {
-    const [code, codeDispatch] = useReducer(codeReducer, null, () => {
-        const res = [];
-        for (let i = 0; i < 20; i++) {
-            res.push(new Array(60).fill(" "));
-        }
-        return res;
-    });
-
-    const providerValue: IBefungeContext = useMemo(
-        () => ({code, codeDispatch}),
-        [code, codeDispatch]
+    const befungeContextValue = useMemo(
+        () => ({befungeInterpreter: new BefungeInterpreter(createInitialCode())}),
+        []
     );
 
     return (
-        <BefungeContext.Provider value={providerValue}>
+        <BefungeContext.Provider value={befungeContextValue}>
             {props.children}
         </BefungeContext.Provider>
     )

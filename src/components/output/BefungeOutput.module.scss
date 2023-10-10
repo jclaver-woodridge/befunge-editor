@@ -1,0 +1,28 @@
+@import "styles/theme";
+@import "styles/sizes";
+
+.outputbox {
+    padding: 1em;
+
+    border: 2px solid var(--primaryVeryDark);
+
+    position: relative;
+
+    overflow: scroll;
+
+    h2 {
+        margin-top: 0;
+        margin-bottom: 0.5em;
+    }
+}
+
+.clearbutton {
+    position: absolute;
+
+    color: var(--primaryDark);
+    font-weight: 600;
+    font-size: 1em;
+
+    top: 1em;
+    right: 1em;
+}

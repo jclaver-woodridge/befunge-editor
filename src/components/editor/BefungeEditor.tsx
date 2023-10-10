@@ -1,20 +1,20 @@
 import React from 'react';
 import { BefungeTile } from './BefungeTile';
 import styles from './BefungeEditor.module.scss';
-import { useBefungeContext } from 'providers/BefungeProvider';
+import { useCodeContext } from 'providers/CodeProvider';
 
 export const BefungeEditor: React.FC = () => {
-    const {code, codeDispatch} = useBefungeContext();
+    const { code, codeDispatch, cursor } = useCodeContext();
 
     return (
         <div className={styles.editor}>
             {code.map((row, rowInd) => {
-                return (<div key={rowInd}>
+                return (<div key={rowInd} className={styles["editor-row"]}>
                     {row.map((col, colInd) => (
                         <BefungeTile
                             key={rowInd + "," + colInd}
                             val={code[rowInd][colInd]}
-                            status="none"
+                            status={cursor[0] == colInd && cursor[1] == rowInd ? "hover" : "none"}
                             row={rowInd}
                             col={colInd}
                             codeDispatch={codeDispatch}

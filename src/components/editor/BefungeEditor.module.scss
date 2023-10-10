@@ -2,9 +2,16 @@
 
 .editor {
     padding: 1em;
+    width: 100%;
 
     border: 2px solid var(--primaryVeryDark);
-    border-radius: 0.5em;
-
     background-color: var(--primaryDark);
+
+    overflow-x: scroll;
+    text-align: center;
+}
+
+.editor-row {
+    white-space: nowrap;
+    display: inline-block;
 }

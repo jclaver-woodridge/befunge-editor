@@ -12,16 +12,19 @@ export class BefungeInterpreter {
     #height: number;
     #initialProgram: string[][];
 
-    #x: number = 0;
-    #y: number = 0;
+    #x = 0;
+    #y = 0;
     #dir: Dir = ">";
-    #stringMode: boolean = false;
+    #stringMode = false;
     #program: string[][] = [];
     #stack: number[] = [];
 
-    #input: string = "";
-    #output: string = "";
+    #input = "";
+    #output = "";
+
     #outputCallback: (s: string) => void = () => {};
+    #cursorCallback: (x: number, y: number) => void = () => {};
+    #setCallback: (x: number, y: number, v: string) => void = () => {};
 
     constructor(program: string[][] | string[]) {
         // getting program dimensions
@@ -30,13 +33,16 @@ export class BefungeInterpreter {
 
         // copying the given program into an initial state
         this.#initialProgram = [];
+        this.#program = [];
         if (isStrArr(program)) {
             for (let i = 0; i < this.#height; i++) {
                 this.#initialProgram.push(program[i].split(""));
+                this.#program.push([...this.#initialProgram[i]]);
             }
         } else {
             for (let i = 0; i < this.#height; i++) {
                 this.#initialProgram.push([...program[i]]);
+                this.#program.push([...this.#initialProgram[i]]);
             }
         }
 
@@ -45,13 +51,15 @@ export class BefungeInterpreter {
     }
 
     reset() {
-        this.#program = [];
-        for (let i = 0; i < this.#height; i++) {
-            this.#program.push([...this.#initialProgram[i]]);
+        for (let row = 0; row < this.#height; row++) {
+            for (let col = 0; col < this.#width; col++) {
+                if (this.#program[row][col] != this.#initialProgram[row][col]) {
+                    this.setAt(col, row, this.#initialProgram[row][col]);
+                }
+            }
         }
 
-        this.#x = 0;
-        this.#y = 0;
+        this.#setCursor(0, 0);
         this.#dir = ">";
         this.#stringMode = false;
 
@@ -61,7 +69,11 @@ export class BefungeInterpreter {
         this.#output = "";
     }
 
-    setAt(x: number, y: number, value: string, permanent: boolean = false) {
+    getAt(x: number, y: number) {
+        return this.#program[y][x];
+    }
+
+    setAt(x: number, y: number, value: string, external = false) {
         if (value.length == 0) {value = " ";}
         if (value.length > 1) {value = value.substring(1, 2);}
 
@@ -71,13 +83,15 @@ export class BefungeInterpreter {
         if (y < 0) {y += this.#height;}
 
         this.#program[y][x] = value;
-        if (permanent) {
+        if (external) {
             this.#initialProgram[y][x] = value;
+        } else {
+            this.#setCallback(x, y, value);
         }
     }
 
     getState() {
-        let res: string[][] = [];
+        const res: string[][] = [];
         for (let i = 0; i < this.#height; i++) {
             res.push([...this.#program[i]]);
         }
@@ -93,7 +107,9 @@ export class BefungeInterpreter {
     }
 
     run() {
-        while (this.step()) {}
+        while (this.step()) {
+            // do nothing
+        }
 
         return this.#output;
     }
@@ -131,7 +147,7 @@ export class BefungeInterpreter {
                     case "+": this.#push(a + b); break;
                     case "-": this.#push(b - a); break;
                     case "*": this.#push(a * b); break;
-                    case "/": this.#push(a == 0 ? 0 : (b / a)|0); break;
+                    case "/": this.#push(a == 0 ? 0 : Math.trunc(b / a)); break;
                     case "%": this.#push(a == 0 ? 0 : b % a); break;
                     case "`": this.#push(b > a ? 1 : 0); break;
                     case "\\": this.#push(a); this.#push(b); break;
@@ -183,6 +199,14 @@ export class BefungeInterpreter {
         this.#outputCallback = c;
     }
 
+    setCursorCallback(c: (x: number, y: number) => void) {
+        this.#cursorCallback = c;
+    }
+
+    setSetCallback(c: (x: number, y: number, v: string) => void) {
+        this.#setCallback = c;
+    }
+
     #push(n: number) {
         this.#stack.push(n);
     }
@@ -195,18 +219,29 @@ export class BefungeInterpreter {
         }
     }
 
+    #setCursor(x: number, y: number) {
+        this.#x = x;
+        this.#y = y;
+        this.#cursorCallback(x, y);
+    }
+
     #move() {
+        let x = this.#x;
+        let y = this.#y;
+
         switch (this.#dir) {
-            case "^": this.#y--; break;
-            case "v": this.#y++; break;
-            case "<": this.#x--; break;
-            case ">": this.#x++; break;
+            case "^": y--; break;
+            case "v": y++; break;
+            case "<": x--; break;
+            case ">": x++; break;
         }
 
-        if (this.#y < 0) {this.#y = this.#height - 1;}
-        if (this.#y >= this.#height) {this.#y = 0;}
-        if (this.#x < 0) {this.#x = this.#width - 1;}
-        if (this.#x >= this.#width) {this.#x = 0;}
+        if (y < 0) {y = this.#height - 1;}
+        if (y >= this.#height) {y = 0;}
+        if (x < 0) {x = this.#width - 1;}
+        if (x >= this.#width) {x = 0;}
+
+        this.#setCursor(x, y);
     }
 
     #getNumber() {

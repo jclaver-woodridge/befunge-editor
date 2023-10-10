@@ -1,0 +1,32 @@
+@import "styles/theme";
+
+.runner-cont {
+    padding: 1em;
+
+    border: 2px solid var(--primaryVeryDark);
+
+    h2 {
+        margin-top: 0;
+        margin-bottom: 0.5em;
+    }
+}
+
+.startstop-cont {
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+
+    margin: 0.5em 0;
+
+    button {
+        flex: 1;
+
+        color: var(--primaryDark);
+        font-weight: 600;
+        font-size: 1em;
+    }
+}
+
+.speed-cont {
+    margin: 0.5em 0em;
+}
