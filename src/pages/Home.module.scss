@@ -6,18 +6,31 @@
     flex-direction: column;
     align-items: center;
 
-    @media (max-width: $sizeAdjustThreshold) {
-        width: 100%;
-    }
+    width: 100%;
 
-    @media (min-width: $sizeAdjustThreshold) {
-        width: 80%;
-    }
+    margin-bottom: $runnerHeight;
+}
+
+.control-output-outer {
+    position: fixed;
+    bottom: 0px;
+    width: 100%;
+    height: $runnerHeight;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    font-size: 1.2em;
 
     .control-output-container {
+        height: 100%;
+
         display: flex;
         flex-direction: row;
         align-items: stretch;
+
+        background-color: var(--primaryPrettyLight);
 
         @media (min-width: $sizeAdjustThreshold) {
             width: 80%;

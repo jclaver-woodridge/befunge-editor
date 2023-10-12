@@ -8,11 +8,19 @@
 
     position: relative;
 
-    overflow: scroll;
-
     h2 {
         margin-top: 0;
         margin-bottom: 0.5em;
+    }
+
+    p {
+        height: 7em;
+        overflow-y: scroll;
+
+        border: 1px solid var(--primaryVeryDark);
+        box-sizing: border-box;
+
+        padding: 0.5em;
     }
 }
 

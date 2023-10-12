@@ -6,13 +6,16 @@ import { BefungeRunner } from 'components/controls/BefungeRunner';
 
 export const Home: React.FC = () => {
     return (
-        <div className={styles["home-container"]}>
-            <h1>Welcome to the Befunge Editor!</h1>
-            <BefungeEditor />
-            <div className={styles["control-output-container"]}>
-                <BefungeRunner className={styles.control}/>
-                <BefungeOutput className={styles.output}/>
+        <>
+            <div className={styles["home-container"]}>
+                <BefungeEditor />
             </div>
-        </div>
+            <div className={styles["control-output-outer"]}>
+                <div className={styles["control-output-container"]}>
+                    <BefungeRunner className={styles.control}/>
+                    <BefungeOutput className={styles.output}/>
+                </div>
+            </div>
+        </>
     )
 };

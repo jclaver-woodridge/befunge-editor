@@ -3,8 +3,8 @@ import { BefungeInterpreter } from 'utils/BefungeInterpreter';
 
 export function createInitialCode() {
     const res = [];
-    for (let i = 0; i < 20; i++) {
-        res.push(new Array(60).fill(" "));
+    for (let i = 0; i < 25; i++) {
+        res.push(new Array(80).fill(" "));
     }
     return res;
 }
