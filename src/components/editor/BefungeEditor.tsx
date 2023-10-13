@@ -10,16 +10,18 @@ export const BefungeEditor: React.FC = () => {
         <div className={styles.editor}>
             {code.map((row, rowInd) => {
                 return (<div key={rowInd} className={styles["editor-row"]}>
-                    {row.map((col, colInd) => (
-                        <BefungeTile
-                            key={rowInd + "," + colInd}
-                            val={code[rowInd][colInd]}
-                            status={cursor[0] == colInd && cursor[1] == rowInd ? "hover" : "none"}
-                            row={rowInd}
-                            col={colInd}
-                            codeDispatch={codeDispatch}
-                        />
-                    ))}
+                    <div className={styles["row-inner"]}>
+                        {row.map((col, colInd) => (
+                            <BefungeTile
+                                key={rowInd + "," + colInd}
+                                val={code[rowInd][colInd]}
+                                status={cursor[0] == colInd && cursor[1] == rowInd ? "hover" : "none"}
+                                row={rowInd}
+                                col={colInd}
+                                codeDispatch={codeDispatch}
+                            />
+                        ))}
+                    </div>
                 </div>)
             })}
         </div>

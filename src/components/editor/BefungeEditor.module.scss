@@ -16,4 +16,10 @@
     display: inline-block;
 
     margin-left: 1em;
+
+    .row-inner {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+    }
 }
