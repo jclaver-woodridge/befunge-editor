@@ -25,6 +25,7 @@ export class BefungeInterpreter {
     #outputCallback: (s: string) => void = () => {};
     #cursorCallback: (x: number, y: number) => void = () => {};
     #setCallback: (x: number, y: number, v: string) => void = () => {};
+    #stackCallback: (x: number | null) => void = () => {};
 
     constructor(program: string[][] | string[]) {
         // getting program dimensions
@@ -63,7 +64,9 @@ export class BefungeInterpreter {
         this.#dir = ">";
         this.#stringMode = false;
 
-        this.#stack = [];
+        while (this.#stack.length > 0) {
+            this.#pop();
+        }
 
         this.#input = "";
         this.#output = "";
@@ -207,14 +210,22 @@ export class BefungeInterpreter {
         this.#setCallback = c;
     }
 
+    setStackCallback(c: (x: number | null) => void) {
+        this.#stackCallback = c;
+    }
+
     #push(n: number) {
         this.#stack.push(n);
+        this.#stackCallback(n);
     }
 
     #pop() {
         if (this.#stack.length) {
-            return this.#stack.pop() as number;
+            let res = this.#stack.pop() as number;
+            this.#stackCallback(null);
+            return res;
         } else {
+            this.#stackCallback(null);
             return 0;
         }
     }
