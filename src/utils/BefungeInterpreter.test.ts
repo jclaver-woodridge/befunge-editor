@@ -120,6 +120,15 @@ describe("basic programs", () => {
         expect(bf.run()).toEqual("87178291200 ");
     });
 
+    test("interesting factorial", () => {
+        const bf = new BefungeInterpreter([
+            '18>:80pv      ',
+            ':#^_$.@>*80g1-'
+        ]);
+
+        expect(bf.run()).toEqual("40320 ");
+    });
+
     test("self-modifying calculator", () => {
         const bf = new BefungeInterpreter([
             '~60p&& .@'
