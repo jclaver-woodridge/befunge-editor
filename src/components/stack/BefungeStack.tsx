@@ -9,7 +9,7 @@ export const BefungeStack: React.FC<StyledProps> = (props) => {
 
     return (
         <div className={classNames(styles["stack-cont"], props.className)}>
-            <h2>Stack</h2>
+            <h2>Stack:</h2>
             <div className={styles["stack-val-cont"]}>
                 {stack.map((val, ind) => (
                     <div key={ind}>
