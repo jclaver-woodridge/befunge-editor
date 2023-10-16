@@ -129,6 +129,31 @@ describe("basic programs", () => {
         expect(bf.run()).toEqual("40320 ");
     });
 
+    test("cool random number generator", () => {
+        // the 3 at 0,3 means that this will generate random 3-digit numbers in base-4
+        //  (so in other words, a random number in [0,63].)
+        const bf = new BefungeInterpreter([
+            '&:#v_$@',
+            '   3^ <',
+            'v0<>0v ',
+            'v1?v#<:',
+            'v2<  *-',
+            'v3 < 41',
+            '+    \\.',
+            '>\\1-:|$',
+            '     >^'
+        ]);
+
+        bf.feedInput("1000 ");
+        const output = bf.run();
+
+        expect(
+            output.split(" ")
+                .map(n => parseInt(n))
+                .filter(n => n < 0 || n >= 64)
+        ).toHaveLength(0);
+    });
+
     test("self-modifying calculator", () => {
         const bf = new BefungeInterpreter([
             '~60p&& .@'

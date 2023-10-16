@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useCallback } from 'react';
+import React, { ChangeEvent, KeyboardEvent, useCallback } from 'react';
 import styles from './BefungeTile.module.scss';
 import classNames from 'classnames';
 import { CodeModifyAction } from 'providers/CodeProvider';
@@ -8,12 +8,15 @@ export interface TileProps {
     status: "none" | "hover";
     row: number;
     col: number;
+    tileRef: React.RefObject<HTMLInputElement> | null;
     codeDispatch: React.Dispatch<CodeModifyAction>;
+    moveDispatch: (targetRow: number, targetCol: number) => void;
 }
 
 const BefungeTile : React.FC<TileProps> = React.memo((props) => {
+    const { val, status, row, col, tileRef, codeDispatch, moveDispatch } = props;
     let statusClass = "";
-    switch (props.status) {
+    switch (status) {
         case "hover":
             statusClass = styles["highlight-hover"];
             break;
@@ -21,19 +24,37 @@ const BefungeTile : React.FC<TileProps> = React.memo((props) => {
     }
 
     const onChange = useCallback((event: ChangeEvent<HTMLInputElement>) => {
-        props.codeDispatch({
-            row: props.row,
-            col: props.col,
+        codeDispatch({
+            row: row,
+            col: col,
             val: event.target.value
         });
-    }, [props]);
+    }, [codeDispatch, row, col]);
+
+    const onKeyDown = useCallback((event: KeyboardEvent<HTMLInputElement>) => {
+        // looking for arrow key movement
+        let targetRow = row;
+        let targetCol = col;
+        switch (event.key) {
+            case "ArrowUp": targetRow--; break;
+            case "ArrowDown": targetRow++; break;
+            case "ArrowLeft": targetCol--; break;
+            case "ArrowRight": targetCol++; break;
+            default: return; // exit early if not an arrow-key press
+        }
+
+        // applying arrow key movement
+        moveDispatch(targetRow, targetCol);
+    }, [moveDispatch, row, col]);
 
     return (
         <div className={classNames(styles.tile, statusClass)}>
             <input
-                value={props.val}
+                value={val}
                 type="text"
                 onChange={onChange}
+                onKeyDown={onKeyDown}
+                ref={tileRef}
             />
         </div>
     );
