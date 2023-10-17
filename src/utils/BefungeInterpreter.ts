@@ -141,7 +141,7 @@ export class BefungeInterpreter {
                 const x = this.#pop();
                 const v = this.#pop();
                 this.setAt(x, y, String.fromCharCode(v));
-            } else if ("+-*/%`\\g".includes(instr)) {
+            } else if ("+-*/%`\\g".includes(instr) && instr.length == 1) {
                 // two-pop instrs
                 const a = this.#pop();
                 const b = this.#pop();
@@ -155,9 +155,8 @@ export class BefungeInterpreter {
                     case "`": this.#push(b > a ? 1 : 0); break;
                     case "\\": this.#push(a); this.#push(b); break;
                     case "g": this.#push(this.#program[a][b].charCodeAt(0)); break;
-                    default: console.error(`unknown instr ${instr}`);
                 }
-            } else if ("!_|:$.,".includes(instr)) {
+            } else if ("!_|:$.,".includes(instr) && instr.length == 1) {
                 // one-pop instrs
                 const a = this.#pop();
 
@@ -169,7 +168,6 @@ export class BefungeInterpreter {
                     case "$": break;
                     case ".": this.#addOutput(a.toString() + " "); break;
                     case ",": this.#addOutput(String.fromCharCode(a)); break;
-                    default: console.error(`unknown instr ${instr}`);
                 }
             } else {
                 // other instrs

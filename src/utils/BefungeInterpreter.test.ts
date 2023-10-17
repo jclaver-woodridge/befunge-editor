@@ -179,4 +179,44 @@ describe("basic programs", () => {
             expect(bf.run()).toEqual(pair[1]);
         });
     });
+
+    test('comparison', () => {
+        const bf = new BefungeInterpreter([
+            ">&&`#v_\"rellams\">\" tsrif\"v",
+            "     > \"reggib\" ^     >  v",
+            "                      |:,<",
+            "                      @   "
+        ]);
+
+        const numPairs = [
+            {first: 5, second: 8, outcome: "first smaller"},
+            {first: 500, second: 8, outcome: "first bigger"},
+        ];
+
+        numPairs.forEach(pair => {
+            bf.reset();
+
+            bf.feedInput(`${pair.first} ${pair.second}`);
+            expect(bf.run()).toEqual(pair.outcome);
+        });
+    });
+
+    test('not operator', () => {
+        const bf = new BefungeInterpreter([
+            "&!.@"
+        ]);
+
+        const numPairs = [
+            {input: 0, output: "1 "},
+            {input: 1, output: "0 "},
+            {input: 20, output: "0 "},
+        ];
+
+        numPairs.forEach(pair => {
+            bf.reset();
+
+            bf.feedInput(pair.input.toString());
+            expect(bf.run()).toEqual(pair.output);
+        });
+    });
 });

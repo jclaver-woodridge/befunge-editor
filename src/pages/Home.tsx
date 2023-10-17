@@ -2,7 +2,7 @@ import { BefungeEditor } from 'components/editor/BefungeEditor';
 import React from 'react';
 import styles from './Home.module.scss';
 import { BefungeOutput } from 'components/output/BefungeOutput';
-import { BefungeRunner } from 'components/controls/BefungeRunner';
+import { BefungeController } from 'components/controls/BefungeController';
 import { BefungeStack } from 'components/stack/BefungeStack';
 
 export const Home: React.FC = () => {
@@ -13,7 +13,7 @@ export const Home: React.FC = () => {
             </div>
             <div className={styles["control-output-outer"]}>
                 <div className={styles["control-output-container"]}>
-                    <BefungeRunner className={styles.control}/>
+                    <BefungeController className={styles.control}/>
                     <BefungeOutput className={styles.output}/>
                     <BefungeStack className={styles.stack}/>
                 </div>

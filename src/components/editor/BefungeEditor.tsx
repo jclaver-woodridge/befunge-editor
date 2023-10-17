@@ -33,7 +33,7 @@ export const BefungeEditor: React.FC = () => {
                                 ? tileRefs[i][j]
                                 : createRef()
                         );
-                })
+                });
         });
     }, [codeHeight, codeWidth, setTileRefs]);
 

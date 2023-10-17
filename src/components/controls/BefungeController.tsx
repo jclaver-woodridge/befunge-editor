@@ -1,23 +1,23 @@
 import React from 'react';
-import styles from './BefungeRunner.module.scss';
+import styles from './BefungeController.module.scss';
 import { StyledProps } from 'types/StyledProps';
 import classNames from 'classnames';
 import { useControlContext } from 'providers/ControlProvider';
 
-export const BefungeRunner: React.FC<StyledProps> = (props) => {
+// measured in ms per instruction
+export const controllerSpeeds = [0, 100, 250, 500, 2000];
+
+export const BefungeController: React.FC<StyledProps> = (props) => {
     const { isStart, toggleStart, reset, speed, setSpeed } = useControlContext();
 
     const startStopText = isStart ? "Stop" : "Start";
-
-    // measured in ms per instruction
-    const speeds = [0, 100, 250, 500, 2000];
 
     const speedChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setSpeed(parseInt(event.target.value));
     }
 
     return (
-        <div className={classNames(styles["runner-cont"], props.className)}>
+        <div className={classNames(styles["controller-cont"], props.className)}>
             <h2>Controls:</h2>
             <div className={styles["startstop-cont"]}>
                 <button onClick={toggleStart}>{startStopText}</button>
@@ -25,7 +25,7 @@ export const BefungeRunner: React.FC<StyledProps> = (props) => {
             </div>
 
             <div className={styles["speed-cont"]}>
-                {speeds.map(speedNum => {
+                {controllerSpeeds.map(speedNum => {
                     const perSec = 1000 / speedNum;
                     return (
                         <div key={`speed-${speedNum}`}>
