@@ -19,18 +19,4 @@
     border: 1px solid var(--primaryVeryDark);
 
     overflow-y: scroll;
-
-    div {
-        width: 100%;
-        height: 1.8em;
-
-        box-sizing: border-box;
-
-        border: 1px solid var(--primaryVeryDark);
-        background-color: var(--primaryVeryLight);
-        padding: 0.25em;
-
-        color: var(--primaryVeryDark);
-        text-align: center;
-    }
 }

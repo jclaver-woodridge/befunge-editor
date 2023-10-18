@@ -3,6 +3,7 @@ import { StyledProps } from 'types/StyledProps';
 import styles from './BefungeStack.module.scss';
 import classNames from 'classnames';
 import { useStackContext } from 'providers/StackProvider';
+import { BefungeStackBlock } from './BefungeStackBlock';
 
 export const BefungeStack: React.FC<StyledProps> = (props) => {
     const { stack } = useStackContext();
@@ -12,9 +13,7 @@ export const BefungeStack: React.FC<StyledProps> = (props) => {
             <h2>Stack:</h2>
             <div className={styles["stack-val-cont"]}>
                 {stack.map((val, ind) => (
-                    <div key={ind}>
-                        {val}
-                    </div>
+                    <BefungeStackBlock key={ind} val={val}/>
                 ))}
             </div>
         </div>
