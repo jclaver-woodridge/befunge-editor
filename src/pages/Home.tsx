@@ -4,11 +4,13 @@ import styles from './Home.module.scss';
 import { BefungeOutput } from 'components/output/BefungeOutput';
 import { BefungeController } from 'components/controls/BefungeController';
 import { BefungeStack } from 'components/stack/BefungeStack';
+import { MenuBar } from 'components/menubar/MenuBar';
 
 export const Home: React.FC = () => {
     return (
         <>
             <div className={styles["home-container"]}>
+                <MenuBar />
                 <BefungeEditor />
             </div>
             <div className={styles["control-output-outer"]}>

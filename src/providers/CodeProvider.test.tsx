@@ -38,7 +38,7 @@ describe('codeReducer', () => {
             ["g", "h", "i"],
         ];
 
-        const newCode = CodeContext.codeReducer(code, {row: 1, col: 2, val: "z"});
+        const newCode = CodeContext.codeReducer(code, {type: "set", row: 1, col: 2, val: "z"});
         expect(newCode).toEqual([
             ["a", "b", "c"],
             ["d", "e", "z"],

@@ -51,6 +51,15 @@ export class BefungeInterpreter {
         this.reset();
     }
 
+    clear() {
+        for (let row = 0; row < this.#height; row++) {
+            for (let col = 0; col < this.#width; col++) {
+                this.#initialProgram[row][col] = " ";
+                this.#program[row][col] = " ";
+            }
+        }
+    }
+
     reset() {
         for (let row = 0; row < this.#height; row++) {
             for (let col = 0; col < this.#width; col++) {

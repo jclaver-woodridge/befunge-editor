@@ -25,6 +25,7 @@ const BefungeTile : React.FC<TileProps> = React.memo((props) => {
 
     const onChange = useCallback((event: ChangeEvent<HTMLInputElement>) => {
         codeDispatch({
+            type: "set",
             row: row,
             col: col,
             val: event.target.value
