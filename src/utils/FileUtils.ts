@@ -5,6 +5,9 @@ export function downloadBefungeFile(name: string, program: string[][]) {
 }
 
 // Converts a befunge program to a format that can be downloaded
+// This conversion involves removing trailing spaces until the program is a trimmed rectangle,
+//  and replacing special characters with spaces.
+// Returns the converted program
 export function convertBefungeFile(programOrig: string[][]) {
     // creating program copy for export
     // (also turning any special characters into spaces)
@@ -49,4 +52,32 @@ export function downloadFile(name: string, data: string[]) {
 
     document.body.removeChild(link);
     window.URL.revokeObjectURL(url);
+}
+
+// Prompts the user to upload a Befunge program file
+// Will call the provided callback with the lines of the file
+export function uploadBefungeFile(callback: (file: string[]) => void) {
+    const input = document.createElement("input");
+    input.type = "file";
+
+    input.onchange = () => {
+        if (input.files != null) {
+            const upload: File = input.files[0];
+            upload.text()
+                .then((v) => {
+                    const lines = v.split("\n");
+                    if (lines[lines.length - 1].length == 0) {
+                        lines.pop();
+                    }
+                    callback(lines);
+                })
+                .catch((err) => {
+                    console.error(err);
+                })
+        }
+        document.body.removeChild(input);
+    }
+
+    document.body.appendChild(input);
+    input.click();
 }

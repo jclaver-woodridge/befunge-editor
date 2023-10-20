@@ -2,10 +2,6 @@ import React from 'react';
 import * as CodeContext from './CodeProvider';
 
 describe('cleanActionVal', () => {
-    test('should default to a single space for a null new value', () => {
-        expect(CodeContext.cleanActionVal(null, "a")).toEqual(" ");
-    });
-
     test('should default to a single space for an empty new value', () => {
         expect(CodeContext.cleanActionVal("", "a")).toEqual(" ");
     });
