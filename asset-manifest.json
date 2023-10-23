@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/befunge-editor/static/css/main.880e3e69.css",
+    "main.js": "/befunge-editor/static/js/main.72000ce5.js",
+    "static/js/787.b0d9a6ba.chunk.js": "/befunge-editor/static/js/787.b0d9a6ba.chunk.js",
+    "index.html": "/befunge-editor/index.html",
+    "main.880e3e69.css.map": "/befunge-editor/static/css/main.880e3e69.css.map",
+    "main.72000ce5.js.map": "/befunge-editor/static/js/main.72000ce5.js.map",
+    "787.b0d9a6ba.chunk.js.map": "/befunge-editor/static/js/787.b0d9a6ba.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.880e3e69.css",
+    "static/js/main.72000ce5.js"
+  ]
+}
