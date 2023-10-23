@@ -81,3 +81,22 @@ export function uploadBefungeFile(callback: (file: string[]) => void) {
     document.body.appendChild(input);
     input.click();
 }
+
+// Pads the given Befunge program to a given width and height
+// Returns the modified program
+export function padBefungeProgram(program: string[] | string[][], width: number, height: number) {
+    const sizedProgram: string[][] = [];
+
+    for (let row = 0; row < height; row++) {
+        sizedProgram.push([]);
+        for (let col = 0; col < width; col++) {
+            if (row < program.length && col < program[row].length) {
+                sizedProgram[row].push(program[row][col]);
+            } else {
+                sizedProgram[row].push(" ");
+            }
+        }
+    }
+
+    return sizedProgram;
+}

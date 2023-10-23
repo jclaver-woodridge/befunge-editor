@@ -1,3 +1,5 @@
+import { padBefungeProgram } from "./FileUtils";
+
 type Dir = "^" | "v" | "<" | ">";
 function isDir(s: string): s is Dir {
     return "^v<>".includes(s) && s.length == 1;
@@ -53,6 +55,10 @@ export class BefungeInterpreter {
                 this.#program.push([...this.#initialProgram[i]]);
             }
         }
+    }
+
+    setProgramWithSize(program: string[][] | string[], width: number, height: number) {
+        this.setProgram(padBefungeProgram(program, width, height));
     }
 
     clear() {

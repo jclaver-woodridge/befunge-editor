@@ -1,5 +1,6 @@
 import React, { PropsWithChildren, createContext, useCallback, useContext, useEffect, useMemo, useReducer, useState } from 'react';
 import { createInitialCode, useBefungeContext } from './BefungeProvider';
+import { padBefungeProgram } from 'utils/FileUtils';
 
 export interface CodeSetAction {
     type: "set";
@@ -42,7 +43,7 @@ export function codeReducer(code: string[][], action: CodeModifyAction) {
         newCode[action.row][action.col] = action.val;
         return newCode;
     } else if (action.type == "allset") {
-        return action.newCode;
+        return padBefungeProgram(action.newCode, 80, 25);
     } else {
         const newCode = [];
         for (let row = 0; row < code.length; row++) {
@@ -84,7 +85,7 @@ export const CodeProvider: React.FC<PropsWithChildren> = (props) => {
                 true
             );
         } else if (c.type == "allset") {
-            befungeInterpreter.setProgram(c.newCode);
+            befungeInterpreter.setProgramWithSize(c.newCode, 80, 25);
         } else {
             befungeInterpreter.clear();
         }
