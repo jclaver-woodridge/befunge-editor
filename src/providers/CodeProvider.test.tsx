@@ -2,10 +2,6 @@ import React from 'react';
 import * as CodeContext from './CodeProvider';
 
 describe('cleanActionVal', () => {
-    test('should default to a single space for a null new value', () => {
-        expect(CodeContext.cleanActionVal(null, "a")).toEqual(" ");
-    });
-
     test('should default to a single space for an empty new value', () => {
         expect(CodeContext.cleanActionVal("", "a")).toEqual(" ");
     });
@@ -38,7 +34,7 @@ describe('codeReducer', () => {
             ["g", "h", "i"],
         ];
 
-        const newCode = CodeContext.codeReducer(code, {row: 1, col: 2, val: "z"});
+        const newCode = CodeContext.codeReducer(code, {type: "set", row: 1, col: 2, val: "z"});
         expect(newCode).toEqual([
             ["a", "b", "c"],
             ["d", "e", "z"],

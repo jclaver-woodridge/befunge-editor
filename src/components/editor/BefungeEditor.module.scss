@@ -6,6 +6,7 @@
 
     border: 2px solid var(--primaryVeryDark);
     background-color: var(--primaryDark);
+    box-sizing: border-box;
 
     overflow-x: scroll;
     text-align: center;
@@ -14,8 +15,6 @@
 .editor-row {
     white-space: nowrap;
     display: inline-block;
-
-    margin-left: 1em;
 
     .row-inner {
         display: flex;

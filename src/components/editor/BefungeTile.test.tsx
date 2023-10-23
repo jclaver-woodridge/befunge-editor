@@ -49,7 +49,7 @@ describe('the tile input', () => {
         const inputElem = screen.getByDisplayValue("a");
         fireEvent.input(inputElem, {target: {value: "ab"}});
 
-        expect(codeMock).toHaveBeenCalledWith({row: 2, col: 1, val: "ab"});
+        expect(codeMock).toHaveBeenCalledWith({type: "set", row: 2, col: 1, val: "ab"});
     });
 
     test('should dispatch movements when the user presses arrow keys in it', () => {

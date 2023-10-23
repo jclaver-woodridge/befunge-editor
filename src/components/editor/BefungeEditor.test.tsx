@@ -14,6 +14,7 @@ describe('the editor display', () => {
                     ['a', 'b', 'c']
                 ],
                 codeDispatch: () => {},
+                clearCode: () => {},
                 cursor: [0, 0]
             }));
 
@@ -35,6 +36,7 @@ describe('the move dispatch', () => {
                     ['g', 'h', 'i']
                 ],
                 codeDispatch: () => {},
+                clearCode: () => {},
                 cursor: [0, 0]
             }));
 

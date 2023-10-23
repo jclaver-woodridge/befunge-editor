@@ -1,26 +1,56 @@
 import React, { PropsWithChildren, createContext, useCallback, useContext, useEffect, useMemo, useReducer, useState } from 'react';
 import { createInitialCode, useBefungeContext } from './BefungeProvider';
+import { padBefungeProgram } from 'utils/FileUtils';
 
-export interface CodeModifyAction {
+export interface CodeSetAction {
+    type: "set";
     col: number;
     row: number;
-    val: string | null;
+    val: string;
 }
 
-export function cleanActionVal(val: string | null, cell: string) {
-    if (!val) {return " ";}
+export interface CodeClearAction {
+    type: "clear";
+}
 
-    if (val.length > 1) {return val.replace(cell, "");}
+export interface CodeAllSetAction {
+    type: "allset";
+    newCode: string[][];
+}
+
+export type CodeModifyAction = CodeSetAction | CodeClearAction | CodeAllSetAction;
+
+export function cleanActionVal(val: string, cell: string) {
+    if (val.length < 1) {return " "}
+
+    if (val.length > 1) {
+        const newVal = val.replace(cell, "");
+        if (newVal.length < 1) {
+            return " ";
+        } else {
+            return newVal[0];
+        }
+    }
 
     return val;
 }
 
 export function codeReducer(code: string[][], action: CodeModifyAction) {
-    action.val = cleanActionVal(action.val, code[action.row][action.col]);
+    if (action.type == "set") {
+        action.val = cleanActionVal(action.val, code[action.row][action.col]);
 
-    const newCode = [...code];
-    newCode[action.row][action.col] = action.val;
-    return newCode;
+        const newCode = [...code];
+        newCode[action.row][action.col] = action.val;
+        return newCode;
+    } else if (action.type == "allset") {
+        return padBefungeProgram(action.newCode, 80, 25);
+    } else {
+        const newCode = [];
+        for (let row = 0; row < code.length; row++) {
+            newCode.push(new Array(code[row].length).fill(" "));
+        }
+        return newCode;
+    }
 }
 
 export interface ICodeContext {
@@ -42,14 +72,23 @@ export const CodeProvider: React.FC<PropsWithChildren> = (props) => {
     const [cursor, setCursor] = useState<[number, number]>([0, 0]);
 
     const { befungeInterpreter } = useBefungeContext();
+    useEffect(() => {
+
+    }, [befungeInterpreter]);
 
     const interpCodeDispatch = useCallback((c: CodeModifyAction) => {
-        befungeInterpreter.setAt(
-            c.col,
-            c.row,
-            cleanActionVal(c.val, befungeInterpreter.getAt(c.col, c.row)),
-            true
-        );
+        if (c.type == "set") {
+            befungeInterpreter.setAt(
+                c.col,
+                c.row,
+                cleanActionVal(c.val, befungeInterpreter.getAt(c.col, c.row)),
+                true
+            );
+        } else if (c.type == "allset") {
+            befungeInterpreter.setProgramWithSize(c.newCode, 80, 25);
+        } else {
+            befungeInterpreter.clear();
+        }
         codeDispatch(c);
     }, [codeDispatch, befungeInterpreter]);
 
@@ -58,7 +97,7 @@ export const CodeProvider: React.FC<PropsWithChildren> = (props) => {
             setCursor([x, y]);
         });
         befungeInterpreter.setSetCallback((x: number, y: number, v: string) => {
-            codeDispatch({col: x, row: y, val: v});
+            codeDispatch({type: "set", col: x, row: y, val: v});
         });
     }, [befungeInterpreter, setCursor, codeDispatch]);
 

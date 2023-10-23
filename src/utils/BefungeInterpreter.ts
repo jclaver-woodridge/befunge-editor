@@ -1,3 +1,5 @@
+import { padBefungeProgram } from "./FileUtils";
+
 type Dir = "^" | "v" | "<" | ">";
 function isDir(s: string): s is Dir {
     return "^v<>".includes(s) && s.length == 1;
@@ -8,9 +10,9 @@ function isStrArr(s: string[][] | string[]): s is string[] {
 }
 
 export class BefungeInterpreter {
-    #width: number;
-    #height: number;
-    #initialProgram: string[][];
+    #width = 0;
+    #height = 0;
+    #initialProgram: string[][] = [];
 
     #x = 0;
     #y = 0;
@@ -28,6 +30,13 @@ export class BefungeInterpreter {
     #stackCallback: (x: number | null) => void = () => {};
 
     constructor(program: string[][] | string[]) {
+        this.setProgram(program);
+
+        // resetting the program state
+        this.reset();
+    }
+
+    setProgram(program: string[][] | string[]) {
         // getting program dimensions
         this.#height = program.length;
         this.#width = program[0].length;
@@ -46,9 +55,19 @@ export class BefungeInterpreter {
                 this.#program.push([...this.#initialProgram[i]]);
             }
         }
+    }
 
-        // resetting the program state
-        this.reset();
+    setProgramWithSize(program: string[][] | string[], width: number, height: number) {
+        this.setProgram(padBefungeProgram(program, width, height));
+    }
+
+    clear() {
+        for (let row = 0; row < this.#height; row++) {
+            for (let col = 0; col < this.#width; col++) {
+                this.#initialProgram[row][col] = " ";
+                this.#program[row][col] = " ";
+            }
+        }
     }
 
     reset() {
@@ -219,7 +238,7 @@ export class BefungeInterpreter {
 
     #pop() {
         if (this.#stack.length) {
-            let res = this.#stack.pop() as number;
+            const res = this.#stack.pop() as number;
             this.#stackCallback(null);
             return res;
         } else {
