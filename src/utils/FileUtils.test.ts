@@ -47,11 +47,25 @@ describe('convertBefungeFile', () => {
         ]);
     });
 
+    test('should remove special characters and replace them with spaces', () => {
+        const program = [
+            ["a", "\n", "b"],
+            ["c", "d", "\t"]
+        ];
+
+        const convProgram = FileUtils.convertBefungeFile(program);
+
+        expect(convProgram).toEqual([
+            "a b\n",
+            "cd \n"
+        ]);
+    });
+
     test('complicated case', () => {
         const program = [
             ["a", "b", " ", " ", " "],
             ["d", "e", "z", " "],
-            [" ", " ", " ", " ", " "],
+            [" ", " ", "\t", " ", " "],
             [" ", "9"]
         ];
 
@@ -69,7 +83,7 @@ describe('convertBefungeFile', () => {
         const initProgram = [
             ["a", "b", " ", " ", " "],
             ["d", "e", "z", " "],
-            [" ", " ", " ", " ", " "],
+            [" ", " ", "\t", " ", " "],
             [" ", "9"],
             [" "]
         ];
