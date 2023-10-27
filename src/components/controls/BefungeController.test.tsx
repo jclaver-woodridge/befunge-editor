@@ -1,26 +1,29 @@
 import React from 'react';
-import { fireEvent, render, screen } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import "@testing-library/jest-dom";
 import { BefungeController, controllerSpeeds } from './BefungeController';
 import { mockUseControlContext } from 'test/mocks/mockUseControlContext';
+import userEvent from '@testing-library/user-event';
 
 describe('the start/stop button', () => {
-    test('should fire a start/stop toggle on press', () => {
+    test('should fire a start/stop toggle on press', async () => {
         const toggleStart = jest.fn();
         mockUseControlContext({toggleStart});
 
-        render(<BefungeController/>);
+        const user = renderBefungeController();
 
         const startButton = screen.getAllByRole("button")[0];
-        fireEvent.click(startButton);
+        await user.click(startButton);
 
         expect(toggleStart).toHaveBeenCalledTimes(1);
     });
 
     test('should display start if the code is not running', () => {
-        mockUseControlContext();
+        mockUseControlContext({
+            isStart: false
+        });
 
-        render(<BefungeController/>);
+        renderBefungeController();
 
         const startButton = screen.getAllByRole("button")[0];
         expect(startButton).toHaveTextContent(/start/i);
@@ -31,7 +34,7 @@ describe('the start/stop button', () => {
             isStart: true
         });
 
-        render(<BefungeController/>);
+        renderBefungeController();
 
         const startButton = screen.getAllByRole("button")[0];
         expect(startButton).toHaveTextContent(/stop/i);
@@ -39,14 +42,14 @@ describe('the start/stop button', () => {
 });
 
 describe('the reset button', () => {
-    test('should fire a reset on press', () => {
+    test('should fire a reset on press', async () => {
         const reset = jest.fn();
         mockUseControlContext({reset});
 
-        render(<BefungeController/>);
+        const user = renderBefungeController();
 
         const resetButton = screen.getAllByRole("button")[1];
-        fireEvent.click(resetButton);
+        await user.click(resetButton);
 
         expect(reset).toHaveBeenCalledTimes(1);
     });
@@ -56,7 +59,7 @@ describe('the speed controls', () => {
     test('should have one radio button for each speed', () => {
         mockUseControlContext();
 
-        render(<BefungeController/>);
+        renderBefungeController();
 
         controllerSpeeds.forEach(speed => {
             const speedRegex = new RegExp((1000 / speed).toString(), "i");
@@ -70,7 +73,7 @@ describe('the speed controls', () => {
             speed: 250
         });
 
-        render(<BefungeController/>);
+        renderBefungeController();
 
         controllerSpeeds.forEach(speed => {
             const speedRegex = new RegExp((1000 / speed).toString(), "i");
@@ -84,16 +87,24 @@ describe('the speed controls', () => {
         });
     });
 
-    test('should fire a speed change on press', () => {
+    test('should fire a speed change on press', async () => {
         const setSpeed = jest.fn();
         mockUseControlContext({setSpeed});
 
-        render(<BefungeController/>);
+        const user = renderBefungeController();
 
         const speedElem = screen.getByLabelText("2 instr/sec");
-        fireEvent.click(speedElem);
+        await user.click(speedElem);
 
         expect(setSpeed).toHaveBeenCalledTimes(1);
         expect(setSpeed).toHaveBeenCalledWith(500);
     });
 });
+
+function renderBefungeController() {
+    const user = userEvent.setup();
+
+    render(<BefungeController/>);
+
+    return user;
+}

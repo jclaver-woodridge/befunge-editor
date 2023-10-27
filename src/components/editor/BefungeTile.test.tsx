@@ -1,58 +1,35 @@
 import React, { createRef } from 'react';
-import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import "@testing-library/jest-dom";
-import { BefungeTile } from './BefungeTile';
-import { CodeModifyAction } from 'providers/CodeProvider';
+import { BefungeTile, TileProps } from './BefungeTile';
+import userEvent from '@testing-library/user-event';
 
 describe('the tile display', () => {
     test('should show the given value as an ASCII character', () => {
-        const ref = createRef<HTMLInputElement>();
-        render(
-            <BefungeTile
-                row={1}
-                col={1}
-                val={"a"}
-                status={"none"}
-                tileRef={ref}
-                codeDispatch={() => {}}
-                moveDispatch={() => {}}
-            />
-        );
+        renderBefungeTile({val: "a"});
 
         expect(screen.getByDisplayValue("a")).toBeInTheDocument();
     });
 });
 
 describe('the tile input', () => {
-    let codeMock: jest.Mock;
-    let moveMock: jest.Mock;
-    beforeEach(async () => {
-        codeMock = jest.fn((codeModify: CodeModifyAction) => {});
-        moveMock = jest.fn((targetRow: number, targetCol: number) => {});
-        const ref = createRef<HTMLInputElement>();
-        render(
-            <BefungeTile
-                row={2}
-                col={1}
-                val={"a"}
-                status={"none"}
-                tileRef={ref}
-                codeDispatch={codeMock}
-                moveDispatch={moveMock}
-            />
-        );
+    test('should dispatch code changes when the user inputs into it', async () => {
+        const codeDispatch = jest.fn();
+        const user = renderBefungeTile({
+            val: "a",
+            row: 2,
+            col: 1,
+            codeDispatch
+        });
 
-        await waitFor(() => screen.findByDisplayValue("a"));
-    });
-
-    test('should dispatch code changes when the user inputs into it', () => {
         const inputElem = screen.getByDisplayValue("a");
-        fireEvent.input(inputElem, {target: {value: "ab"}});
+        await user.click(inputElem);
+        await user.keyboard("{b}");
 
-        expect(codeMock).toHaveBeenCalledWith({type: "set", row: 2, col: 1, val: "ab"});
+        expect(codeDispatch).toHaveBeenCalledWith({type: "set", row: 2, col: 1, val: "ab"});
     });
 
-    test('should dispatch movements when the user presses arrow keys in it', () => {
+    test('should dispatch movements when the user presses arrow keys in it', async () => {
         const keys = [
             {key: "ArrowUp", row: 1, col: 1},
             {key: "ArrowDown", row: 3, col: 1},
@@ -60,21 +37,55 @@ describe('the tile input', () => {
             {key: "ArrowRight", row: 2, col: 2}
         ];
 
-        const inputElem = screen.getByDisplayValue("a");
-        keys.forEach(currKey => {
-            moveMock.mockReset();
-
-            fireEvent.keyDown(inputElem, {key: currKey.key});
-
-            expect(moveMock).toHaveBeenCalledTimes(1);
-            expect(moveMock).toHaveBeenCalledWith(currKey.row, currKey.col);
+        const moveDispatch = jest.fn();
+        const user = renderBefungeTile({
+            val: "a",
+            row: 2,
+            col: 1,
+            moveDispatch
         });
+
+        const inputElem = screen.getByDisplayValue("a");
+        for (let i = 0; i < keys.length; i++) {
+            const currKey = keys[i];
+
+            moveDispatch.mockReset();
+
+            await user.click(inputElem);
+            await user.keyboard(`{${currKey.key}}`);
+
+            expect(moveDispatch).toHaveBeenCalledTimes(1);
+            expect(moveDispatch).toHaveBeenCalledWith(currKey.row, currKey.col);
+        };
     });
 
-    test('should not dispatch movements for other key presses', () => {
-        const inputElem = screen.getByDisplayValue("a");
-        fireEvent.keyDown(inputElem, {key: "c"});
+    test('should not dispatch movements for other key presses', async () => {
+        const moveDispatch = jest.fn();
+        const user = renderBefungeTile({
+            val: "a",
+            moveDispatch
+        })
 
-        expect(moveMock).toHaveBeenCalledTimes(0);
+        const inputElem = screen.getByDisplayValue("a");
+        await user.click(inputElem);
+        await user.keyboard("{c}");
+
+        expect(moveDispatch).toHaveBeenCalledTimes(0);
     });
 });
+
+function renderBefungeTile(props?: Partial<TileProps>) {
+    const user = userEvent.setup();
+
+    render(<BefungeTile
+        row = {props?.row ?? 0}
+        col = {props?.col ?? 0}
+        val = {props?.val ?? " "}
+        status = {props?.status ?? "none"}
+        tileRef = {props?.tileRef ?? createRef<HTMLInputElement>()}
+        codeDispatch = {props?.codeDispatch ?? (() => {})}
+        moveDispatch = {props?.moveDispatch ?? (() => {})}
+    />);
+
+    return user;
+}

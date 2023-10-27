@@ -1,8 +1,9 @@
 import React from 'react';
-import { fireEvent, render, screen } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import "@testing-library/jest-dom";
 import { BefungeEditor } from './BefungeEditor';
 import { mockUseCodeContext } from 'test/mocks/mockUseCodeContext';
+import userEvent from '@testing-library/user-event';
 
 describe('the editor display', () => {
     test('has one befunge tile for every character of code', () => {
@@ -16,7 +17,7 @@ describe('the editor display', () => {
             cursor: [0, 0]
         });
 
-        render(<BefungeEditor/>);
+        renderBefungeEditor();
 
         expect(screen.getAllByDisplayValue("a")).toHaveLength(5);
         expect(screen.getAllByDisplayValue("b")).toHaveLength(3);
@@ -37,19 +38,20 @@ describe('the move dispatch', () => {
         });
     });
 
-    test('should try to focus into the input at the target coordinates', () => {
-        render(<BefungeEditor/>);
+    test('should try to focus into the input at the target coordinates', async () => {
+        const user = renderBefungeEditor();
 
         const startInput = screen.getByDisplayValue("e");
-        fireEvent.keyDown(startInput, {key: "ArrowRight"});
-        expect(startInput).not.toHaveFocus();
+        await user.click(startInput);
+        await user.keyboard("{ArrowRight}");
 
+        expect(startInput).not.toHaveFocus();
         const endInput = screen.getByDisplayValue("f");
         expect(endInput).toHaveFocus();
     });
 
-    test('should properly bound the given coordinates', () => {
-        render(<BefungeEditor/>);
+    test('should properly bound the given coordinates', async () => {
+        const user = renderBefungeEditor();
 
         const keys = [
             {start: "a", key: "ArrowLeft", end: "c"},
@@ -58,13 +60,24 @@ describe('the move dispatch', () => {
             {start: "f", key: "ArrowRight", end: "d"}
         ];
 
-        keys.forEach(currKey => {
-            const startInput = screen.getByDisplayValue(currKey.start);
-            fireEvent.keyDown(startInput, {key: currKey.key});
-            expect(startInput).not.toHaveFocus();
+        for (let i = 0; i < keys.length; i++) {
+            const currKey = keys[i];
 
+            const startInput = screen.getByDisplayValue(currKey.start);
+            await user.click(startInput);
+            await user.keyboard(`{${currKey.key}}`);
+
+            expect(startInput).not.toHaveFocus();
             const endInput = screen.getByDisplayValue(currKey.end);
             expect(endInput).toHaveFocus();
-        });
+        };
     });
 });
+
+function renderBefungeEditor() {
+    const user = userEvent.setup();
+
+    render(<BefungeEditor/>);
+
+    return user;
+}
