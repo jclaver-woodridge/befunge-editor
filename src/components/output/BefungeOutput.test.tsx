@@ -1,32 +1,39 @@
 import React from 'react';
-import { fireEvent, render, screen } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import "@testing-library/jest-dom";
-import * as OutputContext from 'providers/OutputProvider';
 import { BefungeOutput } from './BefungeOutput';
+import { mockUseOutputContext } from 'test/mocks/mockUseOutputContext';
+import userEvent from '@testing-library/user-event';
 
 describe('the output display', () => {
-    let outputDispatch: jest.Mock;
-    beforeEach(() => {
-        outputDispatch = jest.fn(() => {});
-
-        jest.spyOn(OutputContext, 'useOutputContext')
-            .mockImplementation(() => ({
-                output: "abc, cool output here!",
-                outputDispatch
-            }));
-
-        render(<BefungeOutput/>);
-    });
-
     test('will display the output it\'s provided', () => {
+        mockUseOutputContext({
+            output: "abc, cool output here!"
+        });
+
+        renderBefungeOutput();
+
         expect(screen.getByText("abc, cool output here!")).toBeInTheDocument();
     });
 
-    test('will clear the output when the clear button is pressed', () => {
+    test('will clear the output when the clear button is pressed', async () => {
+        const outputDispatch = jest.fn();
+        mockUseOutputContext({outputDispatch});
+
+        const user = renderBefungeOutput();
+
         const clearButton = screen.getByRole("button");
-        fireEvent.click(clearButton);
+        await user.click(clearButton);
 
         expect(outputDispatch).toHaveBeenCalledTimes(1);
         expect(outputDispatch).toHaveBeenCalledWith({type: "clear", val: ""});
     });
 });
+
+function renderBefungeOutput() {
+    const user = userEvent.setup();
+
+    render(<BefungeOutput/>);
+
+    return user;
+}

@@ -1,24 +1,23 @@
 import React from 'react';
-import { fireEvent, render, screen } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import "@testing-library/jest-dom";
-import * as CodeContext from 'providers/CodeProvider';
 import { BefungeEditor } from './BefungeEditor';
+import { mockUseCodeContext } from 'test/mocks/mockUseCodeContext';
+import userEvent from '@testing-library/user-event';
 
 describe('the editor display', () => {
     test('has one befunge tile for every character of code', () => {
-        jest.spyOn(CodeContext, "useCodeContext")
-            .mockImplementation(() => ({
-                code: [
-                    ['a', 'a', 'a'],
-                    ['a', 'b', 'b'],
-                    ['a', 'b', 'c']
-                ],
-                codeDispatch: () => {},
-                clearCode: () => {},
-                cursor: [0, 0]
-            }));
+        mockUseCodeContext({
+            code: [
+                ['a', 'a', 'a'],
+                ['a', 'b', 'b'],
+                ['a', 'b', 'c']
+            ],
+            codeDispatch: () => {},
+            cursor: [0, 0]
+        });
 
-        render(<BefungeEditor/>);
+        renderBefungeEditor();
 
         expect(screen.getAllByDisplayValue("a")).toHaveLength(5);
         expect(screen.getAllByDisplayValue("b")).toHaveLength(3);
@@ -28,31 +27,32 @@ describe('the editor display', () => {
 
 describe('the move dispatch', () => {
     beforeEach(() => {
-        jest.spyOn(CodeContext, "useCodeContext")
-            .mockImplementation(() => ({
-                code: [
-                    ['a', 'b', 'c'],
-                    ['d', 'e', 'f'],
-                    ['g', 'h', 'i']
-                ],
-                codeDispatch: () => {},
-                clearCode: () => {},
-                cursor: [0, 0]
-            }));
-
-        render(<BefungeEditor/>);
+        mockUseCodeContext({
+            code: [
+                ['a', 'b', 'c'],
+                ['d', 'e', 'f'],
+                ['g', 'h', 'i']
+            ],
+            codeDispatch: () => {},
+            cursor: [0, 0]
+        });
     });
 
-    test('should try to focus into the input at the target coordinates', () => {
-        const startInput = screen.getByDisplayValue("e");
-        fireEvent.keyDown(startInput, {key: "ArrowRight"});
-        expect(startInput).not.toHaveFocus();
+    test('should try to focus into the input at the target coordinates', async () => {
+        const user = renderBefungeEditor();
 
+        const startInput = screen.getByDisplayValue("e");
+        await user.click(startInput);
+        await user.keyboard("{ArrowRight}");
+
+        expect(startInput).not.toHaveFocus();
         const endInput = screen.getByDisplayValue("f");
         expect(endInput).toHaveFocus();
     });
 
-    test('should properly bound the given coordinates', () => {
+    test('should properly bound the given coordinates', async () => {
+        const user = renderBefungeEditor();
+
         const keys = [
             {start: "a", key: "ArrowLeft", end: "c"},
             {start: "b", key: "ArrowUp", end: "h"},
@@ -60,13 +60,24 @@ describe('the move dispatch', () => {
             {start: "f", key: "ArrowRight", end: "d"}
         ];
 
-        keys.forEach(currKey => {
-            const startInput = screen.getByDisplayValue(currKey.start);
-            fireEvent.keyDown(startInput, {key: currKey.key});
-            expect(startInput).not.toHaveFocus();
+        for (let i = 0; i < keys.length; i++) {
+            const currKey = keys[i];
 
+            const startInput = screen.getByDisplayValue(currKey.start);
+            await user.click(startInput);
+            await user.keyboard(`{${currKey.key}}`);
+
+            expect(startInput).not.toHaveFocus();
             const endInput = screen.getByDisplayValue(currKey.end);
             expect(endInput).toHaveFocus();
-        });
+        };
     });
 });
+
+function renderBefungeEditor() {
+    const user = userEvent.setup();
+
+    render(<BefungeEditor/>);
+
+    return user;
+}
