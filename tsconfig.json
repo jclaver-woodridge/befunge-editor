@@ -26,6 +26,5 @@
   ],
   "exclude": [
     "./src/**/*.test.(ts|tsx)",
-    "./src/test/**/*",
   ],
 }

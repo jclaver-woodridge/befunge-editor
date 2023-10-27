@@ -1,29 +1,14 @@
 import React from 'react';
 import { fireEvent, render, screen } from '@testing-library/react';
 import "@testing-library/jest-dom";
-import * as ControlContext from "providers/ControlProvider";
 import { BefungeController, controllerSpeeds } from './BefungeController';
-
-let toggleStart: jest.Mock;
-let reset: jest.Mock;
-let setSpeed: jest.Mock;
-beforeEach(() => {
-    toggleStart = jest.fn(() => {});
-    reset = jest.fn(() => {});
-    setSpeed = jest.fn(() => {});
-
-    jest.spyOn(ControlContext, "useControlContext")
-        .mockImplementation(() => ({
-            isStart: false,
-            toggleStart,
-            reset,
-            speed: 250,
-            setSpeed
-        }));
-});
+import { mockUseControlContext } from 'test/mocks/mockUseControlContext';
 
 describe('the start/stop button', () => {
     test('should fire a start/stop toggle on press', () => {
+        const toggleStart = jest.fn();
+        mockUseControlContext({toggleStart});
+
         render(<BefungeController/>);
 
         const startButton = screen.getAllByRole("button")[0];
@@ -33,6 +18,8 @@ describe('the start/stop button', () => {
     });
 
     test('should display start if the code is not running', () => {
+        mockUseControlContext();
+
         render(<BefungeController/>);
 
         const startButton = screen.getAllByRole("button")[0];
@@ -40,14 +27,9 @@ describe('the start/stop button', () => {
     });
 
     test('should display stop if the code is running', () => {
-        jest.spyOn(ControlContext, "useControlContext")
-            .mockImplementation(() => ({
-                isStart: true,
-                toggleStart,
-                reset,
-                speed: 250,
-                setSpeed
-            }));
+        mockUseControlContext({
+            isStart: true
+        });
 
         render(<BefungeController/>);
 
@@ -58,6 +40,9 @@ describe('the start/stop button', () => {
 
 describe('the reset button', () => {
     test('should fire a reset on press', () => {
+        const reset = jest.fn();
+        mockUseControlContext({reset});
+
         render(<BefungeController/>);
 
         const resetButton = screen.getAllByRole("button")[1];
@@ -69,6 +54,8 @@ describe('the reset button', () => {
 
 describe('the speed controls', () => {
     test('should have one radio button for each speed', () => {
+        mockUseControlContext();
+
         render(<BefungeController/>);
 
         controllerSpeeds.forEach(speed => {
@@ -79,6 +66,10 @@ describe('the speed controls', () => {
     });
 
     test('should only have the chosen speed selected', () => {
+        mockUseControlContext({
+            speed: 250
+        });
+
         render(<BefungeController/>);
 
         controllerSpeeds.forEach(speed => {
@@ -94,6 +85,9 @@ describe('the speed controls', () => {
     });
 
     test('should fire a speed change on press', () => {
+        const setSpeed = jest.fn();
+        mockUseControlContext({setSpeed});
+
         render(<BefungeController/>);
 
         const speedElem = screen.getByLabelText("2 instr/sec");

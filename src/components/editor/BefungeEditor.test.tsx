@@ -1,22 +1,20 @@
 import React from 'react';
 import { fireEvent, render, screen } from '@testing-library/react';
 import "@testing-library/jest-dom";
-import * as CodeContext from 'providers/CodeProvider';
 import { BefungeEditor } from './BefungeEditor';
+import { mockUseCodeContext } from 'test/mocks/mockUseCodeContext';
 
 describe('the editor display', () => {
     test('has one befunge tile for every character of code', () => {
-        jest.spyOn(CodeContext, "useCodeContext")
-            .mockImplementation(() => ({
-                code: [
-                    ['a', 'a', 'a'],
-                    ['a', 'b', 'b'],
-                    ['a', 'b', 'c']
-                ],
-                codeDispatch: () => {},
-                clearCode: () => {},
-                cursor: [0, 0]
-            }));
+        mockUseCodeContext({
+            code: [
+                ['a', 'a', 'a'],
+                ['a', 'b', 'b'],
+                ['a', 'b', 'c']
+            ],
+            codeDispatch: () => {},
+            cursor: [0, 0]
+        });
 
         render(<BefungeEditor/>);
 
@@ -28,22 +26,20 @@ describe('the editor display', () => {
 
 describe('the move dispatch', () => {
     beforeEach(() => {
-        jest.spyOn(CodeContext, "useCodeContext")
-            .mockImplementation(() => ({
-                code: [
-                    ['a', 'b', 'c'],
-                    ['d', 'e', 'f'],
-                    ['g', 'h', 'i']
-                ],
-                codeDispatch: () => {},
-                clearCode: () => {},
-                cursor: [0, 0]
-            }));
-
-        render(<BefungeEditor/>);
+        mockUseCodeContext({
+            code: [
+                ['a', 'b', 'c'],
+                ['d', 'e', 'f'],
+                ['g', 'h', 'i']
+            ],
+            codeDispatch: () => {},
+            cursor: [0, 0]
+        });
     });
 
     test('should try to focus into the input at the target coordinates', () => {
+        render(<BefungeEditor/>);
+
         const startInput = screen.getByDisplayValue("e");
         fireEvent.keyDown(startInput, {key: "ArrowRight"});
         expect(startInput).not.toHaveFocus();
@@ -53,6 +49,8 @@ describe('the move dispatch', () => {
     });
 
     test('should properly bound the given coordinates', () => {
+        render(<BefungeEditor/>);
+
         const keys = [
             {start: "a", key: "ArrowLeft", end: "c"},
             {start: "b", key: "ArrowUp", end: "h"},
