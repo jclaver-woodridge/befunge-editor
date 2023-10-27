@@ -6,7 +6,7 @@ import { MenuBar } from './MenuBar';
 import * as CodeContext from 'providers/CodeProvider';
 
 const dispatchSpy = jest.fn();
-beforeAll(() => {
+beforeEach(() => {
     jest.spyOn(CodeContext, "useCodeContext")
         .mockImplementation(() => ({
             code: [["a", "b"], ["c", "d"]],
