@@ -1,15 +1,15 @@
 {
   "files": {
-    "main.css": "/befunge-editor/static/css/main.ed3c9449.css",
+    "main.css": "/befunge-editor/static/css/main.81258058.css",
     "main.js": "/befunge-editor/static/js/main.bcb376d9.js",
     "static/js/787.b0d9a6ba.chunk.js": "/befunge-editor/static/js/787.b0d9a6ba.chunk.js",
     "index.html": "/befunge-editor/index.html",
-    "main.ed3c9449.css.map": "/befunge-editor/static/css/main.ed3c9449.css.map",
+    "main.81258058.css.map": "/befunge-editor/static/css/main.81258058.css.map",
     "main.bcb376d9.js.map": "/befunge-editor/static/js/main.bcb376d9.js.map",
     "787.b0d9a6ba.chunk.js.map": "/befunge-editor/static/js/787.b0d9a6ba.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.ed3c9449.css",
+    "static/css/main.81258058.css",
     "static/js/main.bcb376d9.js"
   ]
 }
